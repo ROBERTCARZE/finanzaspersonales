@@ -1,0 +1,11 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Cada usuario autenticado solo puede leer y escribir dentro de su propia
+    // carpeta usuarios/{uid}. Nadie más puede ver ni modificar estos datos,
+    // ni siquiera otro usuario autenticado de este mismo proyecto Firebase.
+    match /usuarios/{userId}/{document=**} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}
